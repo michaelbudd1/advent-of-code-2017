@@ -1,4 +1,4 @@
-fn main() {
+fn spreadsheet_data() -> Vec<[i32; 16]> {
     let mut spreadsheet = Vec::new();
 
     spreadsheet.push([1224, 926, 1380, 688, 845, 109, 118, 88, 1275, 1306, 91, 796, 102, 1361, 27, 995]);
@@ -18,7 +18,37 @@ fn main() {
     spreadsheet.push([1356, 208, 5013, 4231, 193, 169, 3152, 2543, 4430, 4070, 4031, 145, 4433, 4187, 4394, 1754]);
     spreadsheet.push([5278, 113, 4427, 569, 5167, 175, 192, 3903, 155, 1051, 4121, 5140, 2328, 203, 5653, 3233]);
 
-    let final_value = spreadsheet.iter().fold(0, |acc, x| acc + (x.into_iter().max().unwrap() - x.into_iter().min().unwrap()));
+    return spreadsheet;
+}
 
-    println!("{}", final_value);
+fn find_divisible_numbers_in_row(row: &[i32; 16], acc: &i32) -> i32 {
+    let copy = row;
+
+    let mut new_acc_value = 0;
+
+    row.into_iter().for_each(|x| {
+        copy.into_iter().for_each(|y| {
+            if 0 == x % y && x != y {
+                new_acc_value = acc + (x / y);
+            }
+        });
+    });
+
+    return new_acc_value;
+}
+
+fn calculate_part_1(spreadsheet: std::slice::Iter<'_, [i32; 16]>) -> i32 {
+    return spreadsheet.fold(0, |acc, x| acc + (x.into_iter().max().unwrap() - x.into_iter().min().unwrap()));
+}
+
+fn calculate_part_2(spreadsheet: std::slice::Iter<'_, [i32; 16]>) -> i32 {
+    return spreadsheet.fold(0, |acc, x| find_divisible_numbers_in_row(x, &acc));
+}
+
+fn main() {
+    let spreadsheet   = spreadsheet_data();
+    let part_1_result = calculate_part_1(spreadsheet.iter());
+    let part_2_result = calculate_part_2(spreadsheet.iter());
+    println!("Part 1: {}", part_1_result);
+    println!("Part 2: {}", part_2_result);
 }
